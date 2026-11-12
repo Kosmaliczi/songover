@@ -10,32 +10,5 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql
 
-  kafka:
-    image: 'apache/kafka:4.1.0'
-    ports:
-      - '9092:9092'
-
-  keycloak:
-    image: 'quay.io/keycloak/keycloak:26.4'
-    command: start-dev
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-    ports:
-      - '8180:8080'
-
-  rustfs:
-    image: 'rustfs/rustfs:1.0.0'
-    environment:
-      RUSTFS_ACCESS_KEY: ${STORAGE_ACCESS_KEY:-songover}
-      RUSTFS_SECRET_KEY: ${STORAGE_SECRET_KEY:-songover-secret}
-      RUSTFS_CONSOLE_ENABLE: 'true'
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - rustfs-data:/data
-
 volumes:
   postgres-data:
-  rustfs-data:
