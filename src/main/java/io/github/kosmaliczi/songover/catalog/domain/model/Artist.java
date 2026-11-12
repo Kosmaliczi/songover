@@ -1,9 +1,13 @@
 package io.github.kosmaliczi.songover.catalog.domain.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
@@ -19,9 +23,11 @@ public class Artist {
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     private UUID id;
 
+    @Setter
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
+    @Setter
     @Column(length = 1000)
     private String description;
 
