@@ -1,4 +1,4 @@
-package io.github.kosmaliczi.songover.catalog.domain.exception;
+package io.github.kosmaliczi.songover.catalog.artist.domain.exception;
 
 public class ArtistAlreadyExistsException extends RuntimeException {
 

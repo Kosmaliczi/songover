@@ -1,4 +1,4 @@
-package io.github.kosmaliczi.songover.catalog.api.dto;
+package io.github.kosmaliczi.songover.catalog.artist.api.dto;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

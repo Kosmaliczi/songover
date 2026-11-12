@@ -1,13 +1,13 @@
-package io.github.kosmaliczi.songover.catalog.application;
+package io.github.kosmaliczi.songover.catalog.artist.application;
 
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistPatchRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistResponse;
-import io.github.kosmaliczi.songover.catalog.api.mapper.ArtistMapper;
-import io.github.kosmaliczi.songover.catalog.domain.exception.ArtistAlreadyExistsException;
-import io.github.kosmaliczi.songover.catalog.domain.exception.ArtistNotFoundException;
-import io.github.kosmaliczi.songover.catalog.domain.model.Artist;
-import io.github.kosmaliczi.songover.catalog.domain.repository.ArtistRepository;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistPatchRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistResponse;
+import io.github.kosmaliczi.songover.catalog.artist.api.mapper.ArtistMapper;
+import io.github.kosmaliczi.songover.catalog.artist.domain.exception.ArtistAlreadyExistsException;
+import io.github.kosmaliczi.songover.catalog.artist.domain.exception.ArtistNotFoundException;
+import io.github.kosmaliczi.songover.catalog.artist.domain.model.Artist;
+import io.github.kosmaliczi.songover.catalog.artist.domain.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

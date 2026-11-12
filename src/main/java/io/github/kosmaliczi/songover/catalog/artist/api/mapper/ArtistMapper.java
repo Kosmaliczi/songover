@@ -1,9 +1,9 @@
-package io.github.kosmaliczi.songover.catalog.api.mapper;
+package io.github.kosmaliczi.songover.catalog.artist.api.mapper;
 
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistPatchRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistResponse;
-import io.github.kosmaliczi.songover.catalog.domain.model.Artist;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistPatchRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistResponse;
+import io.github.kosmaliczi.songover.catalog.artist.domain.model.Artist;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

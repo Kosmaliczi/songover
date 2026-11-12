@@ -1,4 +1,4 @@
-package io.github.kosmaliczi.songover.catalog.domain.model;
+package io.github.kosmaliczi.songover.catalog.artist.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

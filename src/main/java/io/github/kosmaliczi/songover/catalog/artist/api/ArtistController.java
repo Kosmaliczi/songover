@@ -1,9 +1,9 @@
-package io.github.kosmaliczi.songover.catalog.api;
+package io.github.kosmaliczi.songover.catalog.artist.api;
 
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistPatchRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistResponse;
-import io.github.kosmaliczi.songover.catalog.application.ArtistService;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistPatchRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistResponse;
+import io.github.kosmaliczi.songover.catalog.artist.application.ArtistService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

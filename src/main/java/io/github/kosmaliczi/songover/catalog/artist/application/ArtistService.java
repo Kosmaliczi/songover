@@ -1,8 +1,8 @@
-package io.github.kosmaliczi.songover.catalog.application;
+package io.github.kosmaliczi.songover.catalog.artist.application;
 
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistPatchRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistRequest;
-import io.github.kosmaliczi.songover.catalog.api.dto.ArtistResponse;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistPatchRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistRequest;
+import io.github.kosmaliczi.songover.catalog.artist.api.dto.ArtistResponse;
 
 import java.util.List;
 import java.util.UUID;
