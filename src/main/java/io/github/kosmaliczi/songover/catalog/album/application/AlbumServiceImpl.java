@@ -56,6 +56,15 @@ class AlbumServiceImpl implements AlbumService {
         return albumMapper.toResponse(album);
     }
 
+    @Override
+    @Transactional
+    public void deleteAlbumById(UUID albumId) {
+        if (!albumRepository.existsById(albumId)) {
+            throw new AlbumNotFoundException(albumId);
+        }
+        albumRepository.deleteById(albumId);
+    }
+
     private Album findAlbum(UUID albumId) {
         return albumRepository.findById(albumId)
                 .orElseThrow(() -> new AlbumNotFoundException(albumId));

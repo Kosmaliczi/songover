@@ -56,8 +56,18 @@ class TrackServiceImpl implements TrackService {
         return trackMapper.toResponse(track);
     }
 
+    @Override
+    @Transactional
+    public void deleteTrackById(UUID trackId) {
+        if (!trackRepository.existsById(trackId)) {
+            throw new TrackNotFoundException(trackId);
+        }
+        trackRepository.deleteById(trackId);
+    }
+
     private Track findTrack(UUID trackId) {
         return trackRepository.findById(trackId)
                 .orElseThrow(() -> new TrackNotFoundException(trackId));
     }
+
 }

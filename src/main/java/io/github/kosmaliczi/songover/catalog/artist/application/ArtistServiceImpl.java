@@ -54,6 +54,15 @@ class ArtistServiceImpl implements ArtistService {
         return artistMapper.toResponse(artist);
     }
 
+    @Override
+    @Transactional
+    public void deleteArtistById(UUID artistId) {
+        if (!artistRepository.existsById(artistId)) {
+            throw new ArtistNotFoundException(artistId);
+        }
+        artistRepository.deleteById(artistId);
+    }
+
     private Artist findArtist(UUID artistId) {
         return artistRepository.findById(artistId)
                 .orElseThrow(() -> new ArtistNotFoundException(artistId));
