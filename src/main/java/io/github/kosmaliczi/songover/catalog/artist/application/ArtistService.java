@@ -16,4 +16,6 @@ public interface ArtistService {
     ArtistResponse addArtist(ArtistRequest request);
 
     ArtistResponse patchArtistById(ArtistPatchRequest request, UUID artistId);
+
+    void deleteArtistById(UUID artistId);
 }

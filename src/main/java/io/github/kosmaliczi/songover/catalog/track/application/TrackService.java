@@ -16,4 +16,6 @@ public interface TrackService {
     TrackResponse addTrack(TrackRequest request);
 
     TrackResponse patchTrackById(TrackPatchRequest request, UUID trackId);
+
+    void deleteTrackById(UUID trackId);
 }

@@ -16,4 +16,6 @@ public interface AlbumService {
     AlbumResponse addAlbum(AlbumRequest request);
 
     AlbumResponse patchAlbumById(AlbumPatchRequest request, UUID albumId);
+
+    void deleteAlbumById(UUID albumId);
 }

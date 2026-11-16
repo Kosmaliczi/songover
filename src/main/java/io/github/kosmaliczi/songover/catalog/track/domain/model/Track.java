@@ -1,15 +1,7 @@
 package io.github.kosmaliczi.songover.catalog.track.domain.model;
 
 import io.github.kosmaliczi.songover.catalog.artist.domain.model.Artist;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +39,9 @@ public class Track {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @Version
+    private Long version;
 
     public Track(String title, boolean explicit, Artist artist) {
         this.title = title;
