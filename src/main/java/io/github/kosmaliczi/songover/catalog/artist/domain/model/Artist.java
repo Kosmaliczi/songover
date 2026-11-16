@@ -1,9 +1,6 @@
 package io.github.kosmaliczi.songover.catalog.artist.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +30,9 @@ public class Artist {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @Version
+    private Long version;
 
     public Artist(String name, String description) {
         this.name = name;

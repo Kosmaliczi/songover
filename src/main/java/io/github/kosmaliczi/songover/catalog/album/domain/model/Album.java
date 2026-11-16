@@ -1,13 +1,7 @@
 package io.github.kosmaliczi.songover.catalog.album.domain.model;
 
 import io.github.kosmaliczi.songover.catalog.artist.domain.model.Artist;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +35,9 @@ public class Album {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @Version
+    private Long version;
 
     public Album(String title, LocalDate releaseDate, Artist artist) {
         this.title = title;
