@@ -1,6 +1,7 @@
 package io.github.kosmaliczi.songover.catalog.track.domain.model;
 
 import io.github.kosmaliczi.songover.catalog.artist.domain.model.Artist;
+import io.github.kosmaliczi.songover.catalog.track.domain.exception.InvalidTrackStatusTransitionException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,5 +50,20 @@ public class Track {
         this.artist = artist;
         this.status = TrackStatus.DRAFT;
         this.createdAt = Instant.now();
+    }
+
+    public void publish() {
+        changeStatus(TrackStatus.PUBLISHED);
+    }
+
+    public void unpublish() {
+        changeStatus(TrackStatus.UNPUBLISHED);
+    }
+
+    private void changeStatus(TrackStatus target) {
+        if (!status.canTransitionTo(target)) {
+            throw new InvalidTrackStatusTransitionException(id, status, target);
+        }
+        this.status = target;
     }
 }

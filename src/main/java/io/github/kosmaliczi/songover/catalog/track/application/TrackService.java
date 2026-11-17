@@ -18,4 +18,8 @@ public interface TrackService {
     TrackResponse patchTrackById(TrackPatchRequest request, UUID trackId);
 
     void deleteTrackById(UUID trackId);
+
+    TrackResponse publishTrack(UUID trackId);
+
+    TrackResponse unpublishTrack(UUID trackId);
 }
