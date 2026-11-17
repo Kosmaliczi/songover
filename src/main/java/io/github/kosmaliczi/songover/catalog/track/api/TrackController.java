@@ -46,4 +46,14 @@ public class TrackController {
         trackService.deleteTrackById(trackId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{trackId}/publish")
+    public ResponseEntity<TrackResponse> publishTrack(@PathVariable UUID trackId) {
+        return ResponseEntity.ok(trackService.publishTrack(trackId));
+    }
+
+    @PostMapping("/{trackId}/unpublish")
+    public ResponseEntity<TrackResponse> unpublishTrack(@PathVariable UUID trackId) {
+        return ResponseEntity.ok(trackService.unpublishTrack(trackId));
+    }
 }
