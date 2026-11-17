@@ -1,7 +1,9 @@
 package io.github.kosmaliczi.songover.catalog.track.domain.model;
 
+import io.github.kosmaliczi.songover.catalog.album.domain.model.Album;
 import io.github.kosmaliczi.songover.catalog.artist.domain.model.Artist;
 import io.github.kosmaliczi.songover.catalog.track.domain.exception.InvalidTrackStatusTransitionException;
+import io.github.kosmaliczi.songover.catalog.track.domain.exception.TrackAlbumArtistMismatchException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -38,6 +40,12 @@ public class Track {
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id")
+    private Album album;
+
+    private Integer trackNumber;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -58,6 +66,19 @@ public class Track {
 
     public void unpublish() {
         changeStatus(TrackStatus.UNPUBLISHED);
+    }
+
+    public void assignToAlbum(Album album, int trackNumber) {
+        if (!album.getArtist().getId().equals(artist.getId())) {
+            throw new TrackAlbumArtistMismatchException(id, album.getId());
+        }
+        this.album = album;
+        this.trackNumber = trackNumber;
+    }
+
+    public void removeFromAlbum() {
+        this.album = null;
+        this.trackNumber = null;
     }
 
     private void changeStatus(TrackStatus target) {
