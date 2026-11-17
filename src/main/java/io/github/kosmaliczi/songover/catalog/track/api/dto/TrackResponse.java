@@ -12,6 +12,8 @@ public record TrackResponse(
         TrackStatus status,
         UUID artistId,
         String artistName,
+        UUID albumId,
+        String albumTitle,
+        Integer trackNumber,
         Instant createdAt
-) {
-}
+){}

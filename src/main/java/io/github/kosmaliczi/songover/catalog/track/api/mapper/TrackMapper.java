@@ -16,6 +16,8 @@ public interface TrackMapper {
 
     @Mapping(target = "artistId", source = "artist.id")
     @Mapping(target = "artistName", source = "artist.name")
+    @Mapping(target = "albumId", source = "album.id")
+    @Mapping(target = "albumTitle", source = "album.title")
     TrackResponse toResponse(Track track);
 
     List<TrackResponse> toResponseList(List<Track> tracks);

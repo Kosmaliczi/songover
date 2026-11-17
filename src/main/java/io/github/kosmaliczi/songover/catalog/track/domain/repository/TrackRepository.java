@@ -15,4 +15,9 @@ public interface TrackRepository extends JpaRepository<Track, UUID> {
 
     @EntityGraph(attributePaths = "artist")
     List<Track> findAllByArtistId(UUID artistId);
+
+    @EntityGraph(attributePaths = {"artist", "album"})
+    List<Track> findAllByAlbumIdOrderByTrackNumberAsc(UUID albumId);
+
+    boolean existsByAlbumIdAndTrackNumberAndIdNot(UUID albumId, Integer trackNumber, UUID trackId);
 }
