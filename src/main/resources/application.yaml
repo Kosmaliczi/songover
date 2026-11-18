@@ -5,3 +5,12 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+
+songover:
+  storage:
+    endpoint: http://localhost:9000
+    region: us-east-1
+    access-key: ${STORAGE_ACCESS_KEY:songover}
+    secret-key: ${STORAGE_SECRET_KEY:songover-secret}
+    bucket: songover-audio
+    presigned-url-ttl: 15m
