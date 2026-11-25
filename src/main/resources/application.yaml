@@ -5,6 +5,14 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+  modulith:
+    runtime:
+      verification-enabled: true
+    events:
+      republish-outstanding-events-on-restart: true
+      jdbc:
+        schema-initialization:
+          enabled: false
 
 songover:
   storage:
