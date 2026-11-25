@@ -1,5 +1,6 @@
 package io.github.kosmaliczi.songover.media.upload.application;
 
+import io.github.kosmaliczi.songover.media.TrackUploadEligibility;
 import io.github.kosmaliczi.songover.media.infrastructure.storage.AudioStorage;
 import io.github.kosmaliczi.songover.media.infrastructure.storage.PresignedUpload;
 import io.github.kosmaliczi.songover.media.upload.api.dto.UploadRequest;
@@ -7,7 +8,9 @@ import io.github.kosmaliczi.songover.media.upload.api.dto.UploadResponse;
 import io.github.kosmaliczi.songover.media.upload.api.dto.UploadUrlResponse;
 import io.github.kosmaliczi.songover.media.upload.api.mapper.UploadMapper;
 import io.github.kosmaliczi.songover.media.upload.domain.exception.FileNotUploadedException;
+import io.github.kosmaliczi.songover.media.upload.domain.exception.TrackNotAcceptingUploadException;
 import io.github.kosmaliczi.songover.media.upload.domain.exception.UploadNotFoundException;
+import io.github.kosmaliczi.songover.media.upload.domain.exception.UploadTrackNotFoundException;
 import io.github.kosmaliczi.songover.media.upload.domain.model.Upload;
 import io.github.kosmaliczi.songover.media.upload.domain.repository.UploadRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +27,12 @@ class UploadServiceImpl implements UploadService {
     private final UploadRepository uploadRepository;
     private final AudioStorage audioStorage;
     private final UploadMapper uploadMapper;
+    private final TrackUploadEligibility trackUploadEligibility;
 
     @Override
     @Transactional
     public UploadUrlResponse createUpload(UUID trackId, UploadRequest request) {
+        verifyTrackAcceptsUpload(trackId);
         Upload upload = uploadRepository.save(new Upload(trackId, request.contentType(), request.sizeBytes()));
         PresignedUpload presigned = audioStorage.createUploadUrl(
                 upload.getObjectKey(), upload.getContentType(), upload.getSizeBytes());
@@ -56,5 +61,14 @@ class UploadServiceImpl implements UploadService {
     private Upload findUpload(UUID uploadId) {
         return uploadRepository.findById(uploadId)
                 .orElseThrow(() -> new UploadNotFoundException(uploadId));
+    }
+
+    private void verifyTrackAcceptsUpload(UUID trackId) {
+        switch (trackUploadEligibility.check(trackId)) {
+            case TRACK_NOT_FOUND -> throw new UploadTrackNotFoundException(trackId);
+            case TRACK_NOT_ACCEPTING_UPLOAD -> throw new TrackNotAcceptingUploadException(trackId);
+            case ELIGIBLE -> {
+            }
+        }
     }
 }
