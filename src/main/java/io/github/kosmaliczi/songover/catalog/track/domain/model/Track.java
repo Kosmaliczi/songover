@@ -72,6 +72,14 @@ public class Track {
         return status.canTransitionTo(TrackStatus.PROCESSING);
     }
 
+    public void startProcessing() {
+        changeStatus(TrackStatus.PROCESSING);
+    }
+
+    public boolean canStartProcessing() {
+        return status.canTransitionTo(TrackStatus.PROCESSING);
+    }
+
     public void assignToAlbum(Album album, int trackNumber) {
         if (!album.getArtist().getId().equals(artist.getId())) {
             throw new TrackAlbumArtistMismatchException(id, album.getId());
