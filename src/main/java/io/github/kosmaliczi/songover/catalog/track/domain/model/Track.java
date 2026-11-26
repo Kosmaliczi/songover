@@ -68,6 +68,10 @@ public class Track {
         changeStatus(TrackStatus.UNPUBLISHED);
     }
 
+    public void startProcessing() {
+        changeStatus(TrackStatus.PROCESSING);
+    }
+
     public boolean canStartProcessing() {
         return status.canTransitionTo(TrackStatus.PROCESSING);
     }
