@@ -14,7 +14,12 @@ Songover to backend (REST API) platformy streamingu muzyki z wbudowanym trybem k
 - **Przetwarzanie audio** jako moduł aplikacji: transkodowanie (ffmpeg) i separacja wokalu modelem AI (ONNX Runtime for Java)
 - **PostgreSQL** z osobnym schematem dla każdego modułu, **RustFS** (API S3) do przechowywania plików audio
 
-Pełna dokumentacja projektu: [docs/SPECIFICATION.md](docs/SPECIFICATION.md).
+Pełna dokumentacja projektu:
+
+[Specyfikacja projektu](docs/SPECIFICATION.md),
+
+[Ręczne testowanie endpointów](docs/MANUAL_TESTING.md)
+
 
 ## Technologie
 
@@ -31,9 +36,10 @@ Wymagania: JDK 21, Docker.
 ## Plan realizacji
 
 - [ ] M0 – Fundament: konfiguracja projektu, infrastruktura lokalna, CI, bezpieczeństwo
-- [ ] M1 – Katalog i artyści
+- [x] M1 – Katalog i artyści
 - [ ] M2 – Wgrywanie, przetwarzanie i streaming utworów
 - [ ] M3 – Odtwarzacz: zdarzenia odtwarzania, historia, playlisty, biblioteka
 - [ ] M4 – Statystyki i wyszukiwarka
 - [ ] M5 – Karaoke i equalizer
 - [ ] M6 – Dopracowanie i dokumentacja
+
