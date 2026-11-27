@@ -22,3 +22,6 @@ songover:
     secret-key: ${STORAGE_SECRET_KEY:songover-secret}
     bucket: songover-audio
     presigned-url-ttl: 15m
+  ffprobe:
+    path: ffprobe
+    timeout: 30s

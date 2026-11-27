@@ -7,6 +7,7 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
 import java.util.Optional;
@@ -32,6 +33,16 @@ public class AudioStorage {
                 .putObjectRequest(objectRequest));
 
         return new PresignedUpload(presigned.url().toString(), presigned.expiration());
+    }
+
+    public String createDownloadUrl(String objectKey) {
+        PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(request -> request
+                .signatureDuration(properties.presignedUrlTtl())
+                .getObjectRequest(get -> get
+                        .bucket(properties.bucket())
+                        .key(objectKey)));
+
+        return presigned.url().toString();
     }
 
     public Optional<Long> findObjectSize(String objectKey) {

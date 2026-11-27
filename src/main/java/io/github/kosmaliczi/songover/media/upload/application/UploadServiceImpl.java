@@ -1,9 +1,9 @@
 package io.github.kosmaliczi.songover.media.upload.application;
 
-import io.github.kosmaliczi.songover.media.TrackUploadEligibility;
-import io.github.kosmaliczi.songover.media.UploadCompleted;
+import io.github.kosmaliczi.songover.media.events.UploadCompleted;
 import io.github.kosmaliczi.songover.media.infrastructure.storage.AudioStorage;
 import io.github.kosmaliczi.songover.media.infrastructure.storage.PresignedUpload;
+import io.github.kosmaliczi.songover.media.spi.TrackUploadEligibility;
 import io.github.kosmaliczi.songover.media.upload.api.dto.UploadRequest;
 import io.github.kosmaliczi.songover.media.upload.api.dto.UploadResponse;
 import io.github.kosmaliczi.songover.media.upload.api.dto.UploadUrlResponse;
