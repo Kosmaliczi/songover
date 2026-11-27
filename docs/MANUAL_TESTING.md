@@ -4,7 +4,7 @@ Instrukcja sprawdzania API Songover krok po kroku: katalog, upload pliku audio i
 
 ## Przygotowanie
 
-Przed testami muszą działać Docker i aplikacja. Wywołania API robisz w Swaggerze, a sam plik audio wysyłasz komendą w PowerShellu.
+Przed testami muszą działać Docker i aplikacja, a w `PATH` musi być `ffprobe` z pakietu FFmpeg (`winget install --id Gyan.FFmpeg -e`). Wywołania API robisz w Swaggerze, a sam plik audio wysyłasz komendą w PowerShellu.
 
 1. Uruchom Docker Desktop.
 2. Uruchom `SongoverApplication`. Kontenery Postgresa i RustFS wystartują same. W logu musi być `Started SongoverApplication`.
@@ -94,7 +94,7 @@ Oczekiwany wynik: **200**, w odpowiedzi `albumTitle` i `trackNumber: 1`.
 
 ## Scenariusz 2: upload pliku
 
-Upload ma trzy kroki: rezerwacja w aplikacji, wysłanie pliku prosto do RustFS i potwierdzenie w aplikacji. Na końcu utwór sam przechodzi z `DRAFT` na `PROCESSING`. Potrzebujesz `trackId` utworu w statusie `DRAFT`, na przykład ze scenariusza 1.
+Upload ma trzy kroki: rezerwacja w aplikacji, wysłanie pliku prosto do RustFS i potwierdzenie w aplikacji. Potem aplikacja sama sprawdza plik przez ffprobe, a utwór przechodzi z `DRAFT` przez `PROCESSING` do `READY`. Potrzebujesz `trackId` utworu w statusie `DRAFT`, na przykład ze scenariusza 1.
 
 ### 2.1 Sprawdź rozmiar pliku
 
@@ -142,13 +142,31 @@ curl.exe -X PUT -H "Content-Type: audio/mpeg" --upload-file "C:\sciezka\do\piose
 
 `POST /api/v1/uploads/{uploadId}/complete` (bez body).
 
-Oczekiwany wynik: **200**, `"status": "UPLOADED"` i wypełnione `uploadedAt`. W logu aplikacji chwilę później pojawi się linia `Track ... moved to PROCESSING after upload ...`.
+Oczekiwany wynik: **200**, `"status": "UPLOADED"` i wypełnione `uploadedAt`. W logu aplikacji chwilę później pojawią się kolejno:
+
+- `Track ... moved to PROCESSING after upload ...`
+- `Upload ... is valid audio: mp3 / mp3, 213 s`
+- `Track ... is READY, duration 213 s`
 
 ### 2.5 Sprawdź status utworu
 
 `GET /api/v1/tracks/{trackId}`
 
-Oczekiwany wynik: `"status": "PROCESSING"`. Utwór zostaje w tym statusie, dopóki nie powstanie krok przetwarzania pliku.
+Oczekiwany wynik: `"status": "READY"` i `durationSeconds` z długością utworu. Jeśli sprawdzisz od razu po kroku 2.4, możesz jeszcze trafić na `PROCESSING`. Odczekaj sekundę i spróbuj ponownie.
+
+### 2.6 Opublikuj utwór
+
+`POST /api/v1/tracks/{trackId}/publish`
+
+Oczekiwany wynik: **200**, `"status": "PUBLISHED"`. Kolejne `POST /api/v1/tracks/{trackId}/unpublish` zmienia status na `UNPUBLISHED`.
+
+### 2.7 Plik, który nie jest audio
+
+Utwórz nowy utwór i zrób scenariusz 2 z plikiem tekstowym, ale z `"contentType": "audio/mpeg"`. Upload przejdzie, bo RustFS przyjmuje każde bajty. Oczekiwany wynik:
+
+- w logu `Upload ... is not valid audio: ...` i `Track ... FAILED processing: ...`;
+- `GET /api/v1/tracks/{trackId}` zwraca `"status": "FAILED"`;
+- dla takiego utworu można założyć nowy upload z poprawnym plikiem.
 
 ## Scenariusz 3: przypadki błędów
 
@@ -162,7 +180,7 @@ Każdy błąd wraca jako ProblemDetail: JSON z polami `status`, `title` i `detai
 | `POST /tracks` z uciętym JSON-em | 400 | błędny JSON |
 | `GET /tracks/{losowe UUID}` | 404 | utwór nie istnieje |
 | `DELETE /artists/{artistId}`, gdy artysta ma utwory | 409 | dane w użyciu |
-| `POST /tracks/{trackId}/publish` dla utworu w `DRAFT` | 409 | niedozwolona zmiana statusu |
+| `POST /tracks/{trackId}/publish` dla utworu w `DRAFT` albo `FAILED` | 409 | niedozwolona zmiana statusu |
 | `PUT /tracks/{trackId}/album` z albumem innego artysty | 409 | album innego artysty |
 | `PUT /tracks/{trackId}/album` z zajętym numerem utworu | 409 | numer zajęty |
 | `POST /tracks/{losowe UUID}/uploads` | 404 | utwór nie istnieje |
@@ -180,14 +198,14 @@ Każdy błąd wraca jako ProblemDetail: JSON z polami `status`, `title` i `detai
 Po scenariuszu 2 sprawdź, czy dane zgadzają się w bazie i w RustFS.
 
 ```sql
-SELECT title, status FROM catalog.track;
+SELECT title, status, duration_seconds FROM catalog.track;
 SELECT track_id, status, size_bytes, uploaded_at FROM media.upload;
 SELECT event_type, status, completion_date FROM event_publication;
 ```
 
-- `catalog.track`: utwór ma status `PROCESSING`.
+- `catalog.track`: utwór ma status `READY` albo `PUBLISHED`.
 - `media.upload`: upload ma status `UPLOADED` i wypełnione `uploaded_at`.
-- `event_publication`: jest wpis z `UploadCompleted`, statusem `COMPLETED` i datą zakończenia. Pusta `completion_date` oznacza, że listener w `catalog` się nie wykonał. Powód będzie w logu.
+- `event_publication`: są wpisy `UploadCompleted`, `ProcessingRequested` i `AudioProcessed`, wszystkie ze statusem `COMPLETED` i datą zakończenia. Pusta `completion_date` oznacza, że listener się nie wykonał. Powód będzie w logu.
 
 W konsoli RustFS (`http://localhost:9001`) plik leży w buckecie `songover-audio`, w katalogu `tracks/{trackId}/original/`.
 
@@ -200,5 +218,6 @@ W konsoli RustFS (`http://localhost:9001`) plik leży w buckecie `songover-audio
 | `relation ... already exists` przy migracji | tabelę utworzyło coś poza Flyway | sprawdź `application.yaml`, usuń tabelę, uruchom ponownie |
 | upload zostaje w `PENDING_UPLOAD` | nie było kroku 2.4 albo poszedł ze złym id | wywołaj `complete` z `uploadId`, nie z `trackId` |
 | `curl` w PowerShellu zgłasza błąd parametrów | `curl` to w PowerShellu inne polecenie | użyj `curl.exe` |
-| RustFS zwraca `SignatureDoesNotMatch` | inny `Content-Type` niż przy rezerwacji | wyślij z tym samym `Content-Type` |
+| RustFS zwraca `SignatureDoesNotMatch` | inny `Content-Type` albo inny rozmiar pliku niż przy rezerwacji (często: rozmiar sprawdzony dla innego pliku niż wysyłany) | zrób nową rezerwację z dokładnym rozmiarem wysyłanego pliku i wyślij z tym samym `Content-Type` |
+| `Could not start ffprobe at 'ffprobe'`, utwór zostaje w `PROCESSING` | brak FFmpeg w `PATH` albo IntelliJ uruchomiony przed instalacją | zainstaluj FFmpeg, zrestartuj IntelliJ; po restarcie aplikacji zdarzenie wykona się ponownie |
 | aplikacja nie startuje, a w logu jest błąd Modulith | kod jednego modułu używa wewnętrznej klasy innego | log podaje klasę i zależność; popraw import albo przenieś typ do publicznego API modułu |

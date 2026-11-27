@@ -1,4 +1,4 @@
-package io.github.kosmaliczi.songover.media;
+package io.github.kosmaliczi.songover.media.spi;
 
 public enum UploadEligibility {
     ELIGIBLE,

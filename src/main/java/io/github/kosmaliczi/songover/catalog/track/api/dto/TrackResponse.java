@@ -15,5 +15,6 @@ public record TrackResponse(
         UUID albumId,
         String albumTitle,
         Integer trackNumber,
+        Integer durationSeconds,
         Instant createdAt
 ){}

@@ -8,7 +8,7 @@ Songover to backend (REST API) platformy streamingu muzyki z wbudowanym trybem k
 
 ## Architektura w skrócie
 
-- **Modular monolith** oparty na Spring Modulith; moduły komunikują się wyłącznie zdarzeniami
+- **Modular monolith** oparty na Spring Modulith; moduły komunikują się zdarzeniami i publicznymi interfejsami (`api`, `events`, `spi`), a granice są sprawdzane przy starcie
 - **Apache Kafka** jako strumień zdarzeń z odsłuchów, z którego korzystają historia, statystyki i ranking popularności
 - **Keycloak** do uwierzytelniania i autoryzacji opartej na rolach (OAuth2 / OIDC)
 - **Przetwarzanie audio** jako moduł aplikacji: transkodowanie (ffmpeg) i separacja wokalu modelem AI (ONNX Runtime for Java)
@@ -27,7 +27,7 @@ Java 21 · Spring Boot 4 · Spring Modulith · PostgreSQL · Flyway · Apache Ka
 
 ## Uruchomienie
 
-Wymagania: JDK 21, Docker.
+Wymagania: JDK 21, Docker, FFmpeg (`ffprobe` w `PATH`).
 
 ```bash
 ./mvnw verify

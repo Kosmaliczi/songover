@@ -1,8 +1,8 @@
 package io.github.kosmaliczi.songover.catalog.track.application;
 
 import io.github.kosmaliczi.songover.catalog.track.domain.repository.TrackRepository;
-import io.github.kosmaliczi.songover.media.TrackUploadEligibility;
-import io.github.kosmaliczi.songover.media.UploadEligibility;
+import io.github.kosmaliczi.songover.media.spi.TrackUploadEligibility;
+import io.github.kosmaliczi.songover.media.spi.UploadEligibility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

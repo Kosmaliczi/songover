@@ -46,6 +46,8 @@ public class Track {
 
     private Integer trackNumber;
 
+    private Integer durationSeconds;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -70,6 +72,15 @@ public class Track {
 
     public void startProcessing() {
         changeStatus(TrackStatus.PROCESSING);
+    }
+
+    public void markAsReady(int durationSeconds) {
+        changeStatus(TrackStatus.READY);
+        this.durationSeconds = durationSeconds;
+    }
+
+    public void markAsFailed() {
+        changeStatus(TrackStatus.FAILED);
     }
 
     public boolean canStartProcessing() {
